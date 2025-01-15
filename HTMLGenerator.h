@@ -1,35 +1,37 @@
-// HTMLGenerator.h
 #ifndef HTML_GENERATOR_H
 #define HTML_GENERATOR_H
 
 #include <string>
 #include <vector>
+#include <memory>
+
+namespace HTMLGenerator {
 
 // Base class for HTML elements
 class CHTMLElement {
 public:
     virtual std::string ToHTMLString() const = 0; // Pure virtual function
-    virtual ~CHTML() = default; // Virtual destructor
+    virtual ~CHTMLElement() = default; // Virtual destructor
 };
 
 // Class for HTML Document
 class CHTML {
 public:
-    void AddHTML(CHTML* element);
+    void AddHTML(std::shared_ptr<CHTMLElement> element);
     std::string ToHTMLString() const;
 
 private:
-    std::vector<CHTML*> elements; // Store HTML elements
+    std::vector<std::shared_ptr<CHTMLElement>> elements; // Store HTML elements
 };
 
 // Class for Body
 class CBody : public CHTMLElement {
 public:
-    void AddHTML(CHTML* element);
+    void AddHTML(std::shared_ptr<CHTMLElement> element);
     std::string ToHTMLString() const override;
 
 private:
-    std::vector<CHTML*> elements;
+    std::vector<std::shared_ptr<CHTMLElement>> elements;
 };
 
 // Class for Label
@@ -47,7 +49,7 @@ private:
 // Class for Image
 class CImage : public CHTMLElement {
 public:
-    CImage(const std::string& src);
+    explicit CImage(const std::string& src);
     std::string ToHTMLString() const override;
 
 private:
@@ -74,5 +76,7 @@ public:
 private:
     std::vector<std::vector<std::string>> rows;
 };
+
+} // namespace HTMLGenerator
 
 #endif // HTML_GENERATOR_H
