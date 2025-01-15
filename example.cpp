@@ -1,36 +1,25 @@
-// main.cpp
+#include "HTMLGenerator.h"
 #include <iostream>
-#include <fstream>
-#include "HTMLGenerator.h" // Include the HTML generator header
+#include <memory>
 
 int main() {
-    // Create an HTML document
-    CHTML myHTML;
-    CBody myBody;
+    using namespace HTMLGenerator;
 
-    // Create and customize HTML elements
-    CLabel myLabel("Welcome to My Website!", "h1", "blue");
-    CImage myImage("path/to/image.jpg");
-    CLink myLink("https://www.example.com", "Visit Example");
-    CTable myTable;
-    myTable.AddRow({"Header 1", "Header 2"});
-    myTable.AddRow({"Row 1 Col 1", "Row 1 Col 2"});
+    auto body = std::make_shared<CBody>();
+    body->AddHTML(std::make_shared<CLabel>("Hello, World!", "h1", "blue"));
+    body->AddHTML(std::make_shared<CImage>("image.jpg"));
+    body->AddHTML(std::make_shared<CLink>("https://example.com", "Click Here"));
 
-    // Add elements to the body
-    myBody.AddHTML(&myLabel);
-    myBody.AddHTML(&myImage);
-    myBody.AddHTML(&myLink);
-    myBody.AddHTML(&myTable);
+    auto table = std::make_shared<CTable>();
+    table->AddRow({"Name", "Age"});
+    table->AddRow({"Alice", "25"});
+    table->AddRow({"Bob", "30"});
+    body->AddHTML(table);
 
-    // Add body to HTML document
-    myHTML.AddHTML(&myBody);
+    CHTML htmlDocument;
+    htmlDocument.AddHTML(body);
 
-    // Write HTML to file
-    std::ofstream fout("output.html");
-    fout << "<html>\n" << myHTML.ToHTMLString() << "\n</html>";
-    fout.close();
-
-    std::cout << "HTML file created successfully!" << std::endl;
+    std::cout << htmlDocument.ToHTMLString() << std::endl;
 
     return 0;
 }
