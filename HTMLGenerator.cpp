@@ -1,6 +1,6 @@
-
-// HTMLGenerator.cpp
 #include "HTMLGenerator.h"
+
+namespace HTMLGenerator {
 
 // CLabel implementation
 CLabel::CLabel(const std::string& text, const std::string& tag, const std::string& color)
@@ -44,7 +44,7 @@ std::string CTable::ToHTMLString() const {
 }
 
 // CHTML implementation
-void CHTML::AddHTML(CHTML* element) {
+void CHTML::AddHTML(std::shared_ptr<CHTMLElement> element) {
     elements.push_back(element);
 }
 
@@ -57,15 +57,17 @@ std::string CHTML::ToHTMLString() const {
 }
 
 // CBody implementation
-void CBody::AddHTML(CHTML* element) {
+void CBody::AddHTML(std::shared_ptr<CHTMLElement> element) {
     elements.push_back(element);
 }
 
 std::string CBody::ToHTMLString() const {
     std::string body = "<body>\n";
     for (const auto& element : elements) {
-        body += element->ToHTMLString();
+        body += element->ToHTMLString() + "\n";
     }
     body += "</body>";
     return body;
 }
+
+} // namespace HTMLGenerator
